@@ -1,0 +1,54 @@
+import React, { useState } from "react";
+import "./App.css";
+import {Item} from "./components/item";
+import {useList} from './components/hooks/useList'
+
+const initList = [
+  { name: "tomato", calorie: 20 },
+  { name: "rice", calorie: 30 },
+  { name: "candy", calorie: 100 }
+];
+
+function App() {
+  const items = useList(initList)
+  const [editable, setEditable] = useState(false)
+
+  const removeHandler = (e) => {
+    items.removeItem(e.target.name)
+  }
+
+const isEditable = () =>{
+  setEditable(true)
+}
+
+function keyPressHandle(e, i) {
+  if (e.key === "Enter") {
+    setEditable(!editable);
+    items.saveItem(i, e.target.name)
+  }
+}
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h2>Grocery List</h2>
+        {
+          items.list.map((v, k) => {
+            return <Item 
+                        key= {`${k}${v}`} 
+                        item ={v}
+                        onClick = {removeHandler}
+                        editable = {editable}
+                        onDoubleClick = {isEditable}
+                        onKeyPress = {keyPressHandle}
+                        index= {k}
+                        
+                        />
+          })
+        }
+      </header>
+    </div>
+  );
+}
+
+export default App;
